@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/py-data-factory/actions/workflows/publish.yml/badge.svg)](https://github.com/philiprehberger/py-data-factory/actions/workflows/publish.yml)
 [![PyPI version](https://img.shields.io/pypi/v/philiprehberger-data-factory.svg)](https://pypi.org/project/philiprehberger-data-factory/)
 [![License](https://img.shields.io/github/license/philiprehberger/py-data-factory)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Lightweight test data generation with realistic fake values.
 
