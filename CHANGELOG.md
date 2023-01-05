@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 (2026-03-28)
+
+- Add `Factory.related(other, field, source_field)` for foreign-key relationships between factories
+- Add `Factory.field(name, distribution, **params)` for statistical distribution profiles (normal, uniform, exponential)
+- Add `Factory.batch(n, overrides)` for bulk generation with optional per-item or shared overrides
+- Add `Factory.build(**overrides)` keyword argument support for field overrides
+- Add `fake.normal(mean, std)` for sampling from a normal distribution
+- Add `fake.exponential(scale)` for sampling from an exponential distribution
+
 ## 0.2.0 (2026-03-27)
 
 - Add `fake.phone()` for random phone number generation
