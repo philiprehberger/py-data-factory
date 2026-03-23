@@ -1,8 +1,12 @@
 # philiprehberger-data-factory
 
+[![Tests](https://github.com/philiprehberger/py-data-factory/actions/workflows/publish.yml/badge.svg)](https://github.com/philiprehberger/py-data-factory/actions/workflows/publish.yml)
+[![PyPI version](https://img.shields.io/pypi/v/philiprehberger-data-factory.svg)](https://pypi.org/project/philiprehberger-data-factory/)
+[![License](https://img.shields.io/github/license/philiprehberger/py-data-factory)](LICENSE)
+
 Lightweight test data generation with realistic fake values.
 
-## Install
+## Installation
 
 ```bash
 pip install philiprehberger-data-factory
@@ -81,6 +85,13 @@ fake.name()  # always the same name for seed 42
 | `Factory(schema)` | Create a factory from a schema dict |
 | `factory.build()` | Generate one record |
 | `factory.build_batch(n)` | Generate *n* records |
+
+## Development
+
+```bash
+pip install -e .
+python -m pytest tests/ -v
+```
 
 ## License
 

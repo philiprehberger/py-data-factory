@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "philiprehberger-data-factory"
-version = "0.1.0"
+version = "0.1.1"
 description = "Lightweight test data generation with realistic fake values."
 readme = "README.md"
 license = "MIT"
@@ -24,9 +24,16 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/philiprehberger/py-data-factory"
+Homepage = "https://github.com/philiprehberger/py-data-factory#readme"
 Repository = "https://github.com/philiprehberger/py-data-factory"
 Issues = "https://github.com/philiprehberger/py-data-factory/issues"
+Changelog = "https://github.com/philiprehberger/py-data-factory/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/philiprehberger_data_factory"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+strict = true
