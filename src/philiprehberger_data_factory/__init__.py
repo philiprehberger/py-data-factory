@@ -50,6 +50,20 @@ _WORDS: list[str] = [
     "zulu", "quick", "brown", "fox", "jumps",
 ]
 
+_STREET_NAMES: list[str] = [
+    "Oak", "Maple", "Cedar", "Elm", "Pine",
+    "Washington", "Park", "Main", "Highland", "Sunset",
+]
+
+_STREET_TYPES: list[str] = [
+    "Street", "Avenue", "Drive", "Lane", "Boulevard",
+]
+
+_CITY_NAMES: list[str] = [
+    "Springfield", "Riverdale", "Madison", "Georgetown", "Fairview",
+    "Clinton", "Arlington", "Burlington", "Manchester", "Ashland",
+]
+
 
 class _Fake:
     """Generator for realistic fake values."""
@@ -104,6 +118,32 @@ class _Fake:
         """Return a random UUID4 string."""
         return str(_uuid.UUID(int=self._rng.getrandbits(128), version=4))
 
+    def phone(self) -> str:
+        """Return a random phone number in ``+1-XXX-XXX-XXXX`` format."""
+        digits = [str(self._rng.randint(0, 9)) for _ in range(10)]
+        return f"+1-{''.join(digits[:3])}-{''.join(digits[3:6])}-{''.join(digits[6:])}"
+
+    def address(self) -> str:
+        """Return a random street address like ``\"123 Oak Street, Springfield\"``."""
+        number = self._rng.randint(1, 9999)
+        street = self._rng.choice(_STREET_NAMES)
+        street_type = self._rng.choice(_STREET_TYPES)
+        city = self._rng.choice(_CITY_NAMES)
+        return f"{number} {street} {street_type}, {city}"
+
+    def weighted_choice(self, options: dict[str, float]) -> str:
+        """Return a weighted random selection from *options*.
+
+        Keys are the choices and values are their weights.
+
+        Example::
+
+            fake.weighted_choice({"gold": 0.1, "silver": 0.3, "bronze": 0.6})
+        """
+        keys = list(options.keys())
+        weights = [options[k] for k in keys]
+        return self._rng.choices(keys, weights=weights, k=1)[0]
+
 
 fake = _Fake()
 
@@ -129,6 +169,8 @@ class Factory:
         "date": "date",
         "uuid": "uuid",
         "decimal": "decimal",
+        "phone": "phone",
+        "address": "address",
     }
 
     def __init__(self, schema: dict[str, str | Callable[[], Any]]) -> None:
