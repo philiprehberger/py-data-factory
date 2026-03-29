@@ -60,6 +60,59 @@ users = user_factory.build_batch(100)
 # [{'name': ..., 'email': ..., ...}, ...]
 ```
 
+### Bulk generation with overrides
+
+Use `batch()` to generate multiple records with optional per-item or shared overrides:
+
+```python
+from philiprehberger_data_factory import Factory
+
+factory = Factory({"name": "name", "role": "text"})
+
+# Shared overrides applied to every record
+admins = factory.batch(5, overrides={"role": "admin"})
+
+# Per-item overrides
+records = factory.batch(3, overrides=[
+    {"role": "admin"},
+    {"role": "editor"},
+    {"role": "viewer"},
+])
+```
+
+### Relationship / foreign-key support
+
+Link factories so generated objects have consistent foreign-key references:
+
+```python
+from philiprehberger_data_factory import Factory
+
+user_factory = Factory({"id": "uuid", "name": "name"})
+user = user_factory.build()
+
+post_factory = Factory({"title": "text", "body": "text"})
+post_factory.related(user_factory, field="user_id", source_field="id")
+
+post = post_factory.build()
+# post["user_id"] matches user["id"]
+```
+
+### Statistical distribution profiles
+
+Generate numeric fields following statistical distributions:
+
+```python
+from philiprehberger_data_factory import Factory
+
+factory = Factory({"name": "name"})
+factory.field("age", distribution="normal", mean=30, std=10)
+factory.field("score", distribution="uniform", min=0, max=100)
+factory.field("wait_time", distribution="exponential", scale=5.0)
+
+record = factory.build()
+# {'name': 'Alice Johnson', 'age': 28.4, 'score': 73.2, 'wait_time': 3.1}
+```
+
 ### Weighted choices
 
 ```python
@@ -92,7 +145,7 @@ fake.name()  # always the same name for seed 42
 
 ## API
 
-| Method / Function | Description |
+| Function / Class | Description |
 |---|---|
 | `fake.name()` | Random full name |
 | `fake.email()` | Random email address |
@@ -106,10 +159,15 @@ fake.name()  # always the same name for seed 42
 | `fake.phone()` | Random phone number in `+1-XXX-XXX-XXXX` format |
 | `fake.address()` | Random street address with city |
 | `fake.weighted_choice(options)` | Weighted random selection from a dict of options to weights |
+| `fake.normal(mean, std)` | Random float from a normal distribution |
+| `fake.exponential(scale)` | Random float from an exponential distribution |
 | `fake.seed(n)` | Set random seed for reproducibility |
 | `Factory(schema)` | Create a factory from a schema dict |
-| `factory.build()` | Generate one record |
+| `factory.build(**overrides)` | Generate one record with optional field overrides |
 | `factory.build_batch(n)` | Generate *n* records |
+| `factory.batch(n, overrides)` | Generate *n* records with shared or per-item overrides |
+| `factory.field(name, distribution, **params)` | Add a field with a statistical distribution (normal, uniform, exponential) |
+| `factory.related(other, field, source_field)` | Link to another factory for foreign-key consistency |
 
 ## Development
 
@@ -120,10 +178,10 @@ python -m pytest tests/ -v
 
 ## Support
 
-If you find this package useful, consider starring the repository.
+If you find this package useful, consider giving it a star on GitHub — it helps motivate continued maintenance and development.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Philip%20Rehberger-blue?logo=linkedin)](https://www.linkedin.com/in/philiprehberger/)
-[![More Packages](https://img.shields.io/badge/More%20Packages-philiprehberger-orange)](https://github.com/philiprehberger?tab=repositories)
+[![LinkedIn](https://img.shields.io/badge/Philip%20Rehberger-LinkedIn-0A66C2?logo=linkedin)](https://www.linkedin.com/in/philiprehberger)
+[![More packages](https://img.shields.io/badge/more-open%20source%20packages-blue)](https://philiprehberger.com/open-source-packages)
 
 ## License
 
