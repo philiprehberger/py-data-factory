@@ -186,3 +186,40 @@ def test_fake_exponential():
     val = fake.exponential(scale=2.0)
     assert isinstance(val, float)
     assert val >= 0
+
+
+def test_sequence_field_emits_monotonic_ids() -> None:
+    from philiprehberger_data_factory import Factory
+
+    factory = Factory({"name": "name"}).sequence_field("id")
+    records = factory.build_batch(5)
+    assert [r["id"] for r in records] == [1, 2, 3, 4, 5]
+
+
+def test_sequence_field_with_start_and_step() -> None:
+    from philiprehberger_data_factory import Factory
+
+    factory = Factory({"name": "name"}).sequence_field("id", start=100, step=10)
+    records = factory.build_batch(3)
+    assert [r["id"] for r in records] == [100, 110, 120]
+
+
+def test_sequence_field_independent_per_factory() -> None:
+    from philiprehberger_data_factory import Factory
+
+    a = Factory({}).sequence_field("id")
+    b = Factory({}).sequence_field("id")
+    assert a.build()["id"] == 1
+    assert a.build()["id"] == 2
+    assert b.build()["id"] == 1  # independent counter
+    assert a.build()["id"] == 3
+
+
+def test_sequence_field_respects_overrides() -> None:
+    from philiprehberger_data_factory import Factory
+
+    factory = Factory({}).sequence_field("id")
+    assert factory.build(id=999)["id"] == 999
+    # Override skipped the provider, so the counter still starts at 1
+    assert factory.build()["id"] == 1
+    assert factory.build()["id"] == 2

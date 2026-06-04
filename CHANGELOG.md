@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 (2026-06-04)
+
+- Add `Factory.sequence_field(name, start=1, step=1)` for monotonically increasing integer fields with a per-factory counter — ideal for auto-incrementing IDs across `build()` and `build_batch()` calls
+- Add `package-card.webp` to README
+
 ## 0.3.1 (2026-03-31)
 
 - Standardize README to 3-badge format with emoji Support section

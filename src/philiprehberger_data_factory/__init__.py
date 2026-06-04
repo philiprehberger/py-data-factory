@@ -169,6 +169,29 @@ class _Relation:
         self.source_field = source_field
 
 
+class _SequenceProvider:
+    """Provider that emits monotonically increasing integers per factory.
+
+    Each call returns the current counter then advances by *step*. Useful
+    for fields like ``id`` where every generated record needs a unique
+    incrementing value.
+    """
+
+    __slots__ = ("_next", "_step")
+
+    def __init__(self, start: int = 1, step: int = 1) -> None:
+        self._next = start
+        self._step = step
+
+    def __call__(self) -> int:
+        value = self._next
+        self._next += self._step
+        return value
+
+    def reset(self, start: int = 1) -> None:
+        self._next = start
+
+
 class _DistributionProvider:
     """Wraps a statistical distribution as a field provider."""
 
@@ -253,6 +276,32 @@ class Factory:
         """
         provider = _DistributionProvider(distribution, **params)
         self._schema[name] = provider
+        return self
+
+    def sequence_field(
+        self,
+        name: str,
+        start: int = 1,
+        step: int = 1,
+    ) -> Factory:
+        """Register *name* as a monotonically increasing integer sequence.
+
+        Each generated record gets the next value in the sequence; the
+        counter is private to this factory, so two factories that share the
+        same schema produce independent sequences without colliding.
+
+        Parameters
+        ----------
+        name:
+            The field name in the generated record.
+        start:
+            First value emitted. Defaults to ``1``.
+        step:
+            Increment between successive values. Defaults to ``1``.
+
+        Returns the factory instance for chaining.
+        """
+        self._schema[name] = _SequenceProvider(start=start, step=step)
         return self
 
     def related(

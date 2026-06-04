@@ -4,6 +4,8 @@
 [![PyPI version](https://img.shields.io/pypi/v/philiprehberger-data-factory.svg)](https://pypi.org/project/philiprehberger-data-factory/)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/py-data-factory)](https://github.com/philiprehberger/py-data-factory/commits/main)
 
+![philiprehberger-data-factory](https://raw.githubusercontent.com/philiprehberger/py-data-factory/main/package-card.webp)
+
 Lightweight test data generation with realistic fake values.
 
 ## Installation
@@ -138,6 +140,22 @@ fake.seed(42)
 fake.name()  # always the same name for seed 42
 ```
 
+### Auto-incrementing IDs with `sequence_field`
+
+```python
+from philiprehberger_data_factory import Factory
+
+users = Factory({"name": "name", "email": "email"}).sequence_field("id")
+users.build_batch(3)
+# [{"id": 1, "name": ..., ...}, {"id": 2, ...}, {"id": 3, ...}]
+
+# Custom start / step
+orders = Factory({}).sequence_field("order_no", start=1000, step=5)
+```
+
+Each factory owns its own counter, so two factories that share the same
+schema produce independent sequences without colliding.
+
 ## API
 
 | Function / Class | Description |
@@ -163,6 +181,7 @@ fake.name()  # always the same name for seed 42
 | `factory.batch(n, overrides)` | Generate *n* records with shared or per-item overrides |
 | `factory.field(name, distribution, **params)` | Add a field with a statistical distribution (normal, uniform, exponential) |
 | `factory.related(other, field, source_field)` | Link to another factory for foreign-key consistency |
+| `factory.sequence_field(name, start=1, step=1)` | Register a monotonically increasing integer field (per-factory counter) |
 
 ## Development
 
